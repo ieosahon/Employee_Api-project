@@ -18,14 +18,14 @@ namespace Entities.Repo
                 (
                     new Company
                     {
-                        Id = new Guid("8C11C009-A3FD-4BF3-9E5A-1E9DAE4D3F32"),
+                        Id = new Guid("714c4c9c-d975-47ba-a2e1-396bf68c14aa"),
                         Name = "Lehinet Solutions",
                         Address = "Edo Innovation hub, Benin City",
                         Country = "Nigeria"
                     },
                     new Company
                     {
-                        Id = new Guid("EF0812D9-8107-4304-8CE6-13B62F628AC3"),
+                        Id = new Guid("c1d1c92d-23ca-4c06-af26-ade1b8d76bb2"),
                         Name = "EThree Africa",
                         Address = " Edo Innovation hub, Benin City",
                         Country = "Nigeria"

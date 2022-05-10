@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Entities.Models;
+using Entities.Repo;
 
 namespace Entities
 {
@@ -13,6 +14,12 @@ namespace Entities
         public RepoContext(DbContextOptions opt) : base(opt)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new CompanyRepo());
+            modelBuilder.ApplyConfiguration(new CompanyEmployeeRepo());
         }
 
         public DbSet<Company> Companies { get; set; }

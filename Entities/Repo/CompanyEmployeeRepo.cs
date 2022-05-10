@@ -17,38 +17,38 @@ namespace Entities.Repo
                 (
                     new CompanyEmployee
                     {
-                        Id = new Guid("B0F20A77-06DA-4E80-A332-0688322522A6"),
+                        Id = new Guid("6b6d4f35-5ad2-4efe-9365-7f2fb20ce840"),
                         Name = "Ofure Lawrence",
                         Age = 30,
                         Position = "Senior DotNet Developer",
-                        CompanyId = new Guid("8C11C009-A3FD-4BF3-9E5A-1E9DAE4D3F32")
+                        CompanyId = new Guid("714c4c9c-d975-47ba-a2e1-396bf68c14aa")
                     },
 
                     new CompanyEmployee
                     {
-                        Id = new Guid("99B8EF16-4F5B-44F0-82D7-3EBFA5627312"),
+                        Id = new Guid("40d5671d-c386-40bd-a50b-8a784748259d"),
                         Name = "Emmanuel Ehimika",
                         Age = 32,
                         Position = "CEO",
-                        CompanyId = new Guid("EF0812D9-8107-4304-8CE6-13B62F628AC3")
+                        CompanyId = new Guid("c1d1c92d-23ca-4c06-af26-ade1b8d76bb2")
                     },
 
                     new CompanyEmployee
                     {
-                        Id = new Guid("9CD8BEF0 - A2BA - 4762 - B3CB - C65537E44EF8"),
+                        Id = new Guid("a0d3a936-90d1-4af3-8ab4-7d109b3d72f7"),
                         Name = "Darlington Kings",
                         Age = 25,
                         Position = "CTO",
-                        CompanyId = new Guid("8C11C009-A3FD-4BF3-9E5A-1E9DAE4D3F32")
+                        CompanyId = new Guid("714c4c9c-d975-47ba-a2e1-396bf68c14aa")
                     },
 
                     new CompanyEmployee
                     {
-                        Id = new Guid("8C3FC9CF-8365-432E-8424-B4C2F9D1B2EC"),
+                        Id = new Guid("a92f7282-0784-47e9-92d4-462bda60f577"),
                         Name = "Osaro Obazee ",
                         Age = 27,
                         Position = "Manager",
-                        CompanyId = new Guid("EF0812D9-8107-4304-8CE6-13B62F628AC3")
+                        CompanyId = new Guid("c1d1c92d-23ca-4c06-af26-ade1b8d76bb2")
                     }
                 );
         }
