@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Contracts;
+using Entities;
+using LoggerService;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace CompanyEmployees.Extensions
 {
@@ -20,5 +26,10 @@ namespace CompanyEmployees.Extensions
             {
 
             });
+
+        public static void ConfigureLoggerService(this IServiceCollection services) => services.AddScoped<ILoggerManager, LoggerManager>();
+
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<RepoContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("EmployeeApiConn")
+        ));
     }
 }

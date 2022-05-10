@@ -32,7 +32,7 @@ namespace LoggerService
             logger.Info(message);
         }
 
-        public void LogWarning(string message)
+        public void LogWarn(string message)
         {
             logger.Warn(message);
         }
