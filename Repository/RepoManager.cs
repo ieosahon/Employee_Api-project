@@ -10,24 +10,40 @@ namespace Repository
 {
     public class RepoManager : IRepoManager
     {
-        private readonly RepoContext _repoContext;
-        private readonly ICompanyRepo _companyRepo;
-        private readonly IEmployeeRepo _employeeRepo;
+        private RepoContext _repoContext;
+        private ICompanyRepo _companyRepo;
+        private IEmployeeRepo _employeeRepo;
 
-        public RepoManager(RepoContext repoContext, IEmployeeRepo employeeRepo, ICompanyRepo companyRepo)
+        public RepoManager(RepoContext repoContext)//, IEmployeeRepo employeeRepo, ICompanyRepo companyRepo)
         {
             _repoContext = repoContext;
-            _employeeRepo = employeeRepo;
-            _companyRepo = companyRepo;
+            /*_employeeRepo = employeeRepo;
+            _companyRepo = companyRepo;*/
         }
 
-        public ICompanyRepo Company => throw new NotImplementedException();
-
-        public IEmployeeRepo Employee => throw new NotImplementedException();
-
-        public void Save()
+        public ICompanyRepo Company
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (_companyRepo == null)
+                    _companyRepo = new CompanyRepo(_repoContext);
+                return _companyRepo;
+            }
         }
+
+        public IEmployeeRepo Employee
+        {
+            get
+            {
+                if (_employeeRepo == null)
+                    _employeeRepo = new EmployeeRepo(_repoContext);
+                return _employeeRepo;
+            }
+        }
+
+
+        public void Save() => _repoContext.SaveChanges();
+
+
     }
 }
