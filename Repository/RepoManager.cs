@@ -11,10 +11,14 @@ namespace Repository
     public class RepoManager : IRepoManager
     {
         private readonly RepoContext _repoContext;
+        private readonly ICompanyRepo _companyRepo;
+        private readonly IEmployeeRepo _employeeRepo;
 
-        public RepoManager(RepoContext repoContext)
+        public RepoManager(RepoContext repoContext, IEmployeeRepo employeeRepo, ICompanyRepo companyRepo)
         {
             _repoContext = repoContext;
+            _employeeRepo = employeeRepo;
+            _companyRepo = companyRepo;
         }
 
         public ICompanyRepo Company => throw new NotImplementedException();
