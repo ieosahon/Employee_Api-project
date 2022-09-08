@@ -38,14 +38,18 @@ namespace CompanyEmployees.Controllers
         }*/
 
         private readonly ILoggerManager _loggerManager;
-        public WeatherForecastController(ILoggerManager loggerManager)
+        private readonly IRepoManager _repository;
+        public WeatherForecastController(ILoggerManager loggerManager, IRepoManager repository)
         {
             _loggerManager = loggerManager;
+            _repository = repository;
         }
 
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            
+
             _loggerManager.LogInfo("Here is info message from our values controller.");
             _loggerManager.LogDebug("Here is debug message from our values controller.");
             _loggerManager.LogWarn("Here is warn message from our values controller.");

@@ -26,7 +26,9 @@ namespace Repository
             get
             {
                 if (_companyRepo == null)
+                {
                     _companyRepo = new CompanyRepo(_repoContext);
+                }
                 return _companyRepo;
             }
         }
@@ -36,7 +38,9 @@ namespace Repository
             get
             {
                 if (_employeeRepo == null)
+                {
                     _employeeRepo = new EmployeeRepo(_repoContext);
+                }
                 return _employeeRepo;
             }
         }
