@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using CompanyEmployees.MiddleWares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -37,6 +38,8 @@ namespace CompanyEmployees
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepoManager();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllers();
         }
 
@@ -53,6 +56,7 @@ namespace CompanyEmployees
             {
                 app.UseHsts();
             }
+            app.UseMiddleware<CustomErrorExecption>();
 
             app.UseHttpsRedirection();
 

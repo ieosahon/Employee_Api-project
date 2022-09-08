@@ -1,8 +1,10 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Entities.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CompanyEmployees.Controllers
@@ -13,35 +15,32 @@ namespace CompanyEmployees.Controllers
     {
         private readonly IRepoManager _manager;
         private readonly ILoggerManager _logger;
+        private readonly IMapper _mapper;
 
-        public CompaniesController(ILoggerManager logger, IRepoManager manager)
+        public CompaniesController(ILoggerManager logger, IRepoManager manager, IMapper mapper)
         {
             _logger = logger;
             _manager = manager;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetAllCompanies()
         {
-            try
-            {
-                var companies = _manager.Company.GetAllCompanies(trackChanges: false);
+            
 
-                var companiesDto = companies.Select(c => new CompanyDto
+            var companies = _manager.Company.GetAllCompanies(trackChanges: false);
+                var companiesDto = _mapper.Map <IEnumerable<CompanyDto>>(companies);
+
+                /*var companiesDto = companies.Select(c => new CompanyDto
                 {
                     Id = c.Id,
                     Name = c.Name,
                     FullAddress = string.Join(" ", c.Address, c.Country)
-                }).ToList();
+                }).ToList();*/
                 return Ok(companiesDto);
+            
 
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError($"Something went wrong in {nameof(GetAllCompanies)} action {ex}");
-                return StatusCode(500, "Internal server error");
-            }
         }
     }
 }
