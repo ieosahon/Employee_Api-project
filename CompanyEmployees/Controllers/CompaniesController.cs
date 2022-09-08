@@ -1,7 +1,9 @@
 ﻿using Contracts;
+using Entities.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace CompanyEmployees.Controllers
 {
@@ -24,7 +26,14 @@ namespace CompanyEmployees.Controllers
             try
             {
                 var companies = _manager.Company.GetAllCompanies(trackChanges: false);
-                return Ok(companies);
+
+                var companiesDto = companies.Select(c => new CompanyDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    FullAddress = string.Join(" ", c.Address, c.Country)
+                }).ToList();
+                return Ok(companiesDto);
 
             }
             catch (Exception ex)
