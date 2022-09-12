@@ -16,6 +16,12 @@ namespace Repository
 
         }
 
+        public void CreateEmployee(Guid companyId, Employee employee)
+        {
+            employee.CompanyId = companyId;
+            Create(employee);
+        }
+
         public IEnumerable<Employee> GetAllEmployee(Guid companyId, bool trackChanges)
         {
             var employeees = FindByCondition(e => e.CompanyId == companyId, trackChanges).OrderBy(e => e.Name);

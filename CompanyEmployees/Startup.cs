@@ -40,7 +40,11 @@ namespace CompanyEmployees
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers();
+            services.AddControllers(cf =>
+            {
+                cf.RespectBrowserAcceptHeader = true;
+                cf.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();
         }
 
 

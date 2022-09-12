@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
-using Entities.DTO;
+using Entities.DTO.CompanyDto;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -43,7 +44,7 @@ namespace CompanyEmployees.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="getCompanyById")]
         public IActionResult GetCompanyById(Guid Id)
         {
             var company = _manager.Company.GetCompanyById(Id, trackChanges: false);
@@ -53,6 +54,24 @@ namespace CompanyEmployees.Controllers
             }
             var companyDto = _mapper.Map<CompanyDto>(company);
             return Ok(companyDto);
+        }
+
+        [HttpPost]
+        public IActionResult CreateCompany([FromBody] CompanyCreationDto companyCreation)
+        {
+            if (companyCreation == null)
+            {
+                throw new ArgumentNullException("Null data provided");
+            }
+
+
+            // mapping: First object is the destination while the second item is the source
+            var company = _mapper.Map<Company>(companyCreation);
+            _manager.Company.CreateCompany(company);
+            _manager.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(company);
+            return CreatedAtRoute("getCompanyById", new { companyToReturn.Id }, companyToReturn);
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Repository
 
         }
 
+        public void CreateCompany(Company company) => Create(company);
+
         public IEnumerable<Company> GetAllCompanies(bool trackChanges) =>
             FindAll(trackChanges)
             .OrderBy(c => c.Name)

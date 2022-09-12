@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Entities.DTO;
+using Entities.DTO.CompanyDto;
+using Entities.DTO.EmployeeDto;
 using Entities.Models;
 
 namespace CompanyEmployees.Mapper
@@ -13,6 +14,10 @@ namespace CompanyEmployees.Mapper
 
             CreateMap<Employee, EmployeeDto>()
                 .ReverseMap();
+
+            // createion
+            CreateMap<CompanyCreationDto, Company>();
+            CreateMap<CreateEmployeeDto, Employee>();
         }
     }
 }
