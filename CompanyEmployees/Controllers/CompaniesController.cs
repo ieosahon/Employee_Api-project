@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTO.CompanyDto;
+using Entities.DTO.CompanyEmployeeDto;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ using System.Linq;
 
 namespace CompanyEmployees.Controllers
 {
-    [Route("api/v1/companies")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CompaniesController : ControllerBase
     {
@@ -67,6 +68,31 @@ namespace CompanyEmployees.Controllers
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyCreation);
+            _manager.Company.CreateCompany(company);
+            _manager.Save();
+
+            var companyToReturn = _mapper.Map<CompanyDto>(company);
+            return CreatedAtRoute("getCompanyById", new { companyToReturn.Id }, companyToReturn);
+        }
+
+
+        /// <summary>
+        /// create both company and employee(s) at the same time
+        /// </summary>
+        /// <param name="companyEmployeeCreation"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        [HttpPost("company-employee")]
+        public IActionResult CreateCompany([FromBody] CompanyEmployeeCreationDto companyEmployeeCreation)
+        {
+            if (companyEmployeeCreation == null)
+            {
+                throw new ArgumentNullException("Null data provided");
+            }
+
+
+            // mapping: First object is the destination while the second item is the source
+            var company = _mapper.Map<Company>(companyEmployeeCreation);
             _manager.Company.CreateCompany(company);
             _manager.Save();
 
