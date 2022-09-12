@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Entities.Repo
 {
-    internal class CompanyEmployeeRepo : IEntityTypeConfiguration<CompanyEmployee>
+    internal class CompanyEmployeeRepo : IEntityTypeConfiguration<Employee>
     {
-        public void Configure(EntityTypeBuilder<CompanyEmployee> builder)
+        public void Configure(EntityTypeBuilder<Employee> builder)
         {
             builder.HasData
                 (
-                    new CompanyEmployee
+                    new Employee
                     {
                         Id = new Guid("6b6d4f35-5ad2-4efe-9365-7f2fb20ce840"),
                         Name = "Ofure Lawrence",
@@ -24,7 +24,7 @@ namespace Entities.Repo
                         CompanyId = new Guid("714c4c9c-d975-47ba-a2e1-396bf68c14aa")
                     },
 
-                    new CompanyEmployee
+                    new Employee
                     {
                         Id = new Guid("40d5671d-c386-40bd-a50b-8a784748259d"),
                         Name = "Emmanuel Ehimika",
@@ -33,7 +33,7 @@ namespace Entities.Repo
                         CompanyId = new Guid("c1d1c92d-23ca-4c06-af26-ade1b8d76bb2")
                     },
 
-                    new CompanyEmployee
+                    new Employee
                     {
                         Id = new Guid("a0d3a936-90d1-4af3-8ab4-7d109b3d72f7"),
                         Name = "Darlington Kings",
@@ -42,7 +42,7 @@ namespace Entities.Repo
                         CompanyId = new Guid("714c4c9c-d975-47ba-a2e1-396bf68c14aa")
                     },
 
-                    new CompanyEmployee
+                    new Employee
                     {
                         Id = new Guid("a92f7282-0784-47e9-92d4-462bda60f577"),
                         Name = "Osaro Obazee ",

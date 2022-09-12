@@ -42,5 +42,17 @@ namespace CompanyEmployees.Controllers
             
 
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetCompanyById(Guid Id)
+        {
+            var company = _manager.Company.GetCompanyById(Id, trackChanges: false);
+            if (company == null)
+            {
+                return NotFound(company);
+            }
+            var companyDto = _mapper.Map<CompanyDto>(company);
+            return Ok(companyDto);
+        }
     }
 }

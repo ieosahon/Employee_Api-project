@@ -18,11 +18,11 @@ namespace Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CompanyRepo());
+            modelBuilder.ApplyConfiguration(new CompanyData());
             modelBuilder.ApplyConfiguration(new CompanyEmployeeRepo());
         }
 
         public DbSet<Company> Companies { get; set; }
-        public DbSet<CompanyEmployee> CompanyEmployees { get; set; }
+        public DbSet<Employee> CompanyEmployees { get; set; }
     }
 }

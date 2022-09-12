@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Repo
 {
-    public class CompanyRepo : IEntityTypeConfiguration<Company>
+    public class CompanyData : IEntityTypeConfiguration<Company>
     {
 
         public void Configure(EntityTypeBuilder<Company> builder)
