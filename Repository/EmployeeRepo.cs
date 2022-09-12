@@ -27,9 +27,20 @@ namespace Repository
             return employeees.ToList();
         }
 
-        public Employee GetEmployeeById(Guid id, bool trackChanges)
+        public Employee GetEmployeeById(Guid companyId, Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var employee = FindByCondition(e => e.CompanyId == companyId && e.Id == id, trackChanges)
+                .SingleOrDefault();
+            if (employee == null)
+            {
+                return new Employee()
+                {
+                    Id = id,
+                    Name = $"Employee with Id: {id} is not found"
+                };
+            }
+
+            return employee;
         }
     }
 }

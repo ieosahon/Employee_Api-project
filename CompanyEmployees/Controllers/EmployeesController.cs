@@ -33,8 +33,22 @@ namespace CompanyEmployees.Controllers
                 return NotFound(company);
             }
 
-            var employee = _manager.Employee.GetAllEmployee(companyId, trackChanges: false);
-            var employeeDto = _mapper.Map<IEnumerable<EmployeeDto>>(employee);
+            var employees = _manager.Employee.GetAllEmployee(companyId, trackChanges: false);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+            return Ok(employeesDto);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetEmployeeById(Guid companyId, Guid id)
+        {
+            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            if (company == null)
+            {
+                return NotFound(company);
+            }
+
+            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            var employeeDto = _mapper.Map<EmployeeDto>(employee);
             return Ok(employeeDto);
         }
     }
