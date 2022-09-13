@@ -37,7 +37,9 @@ namespace Repository
             }
             return company;
         }
-            
-       
+
+        public IEnumerable<Company> GetCompaniesById(IEnumerable<Guid> ids, bool trackChanges) =>
+            FindByCondition(c => ids.Contains(c.Id), trackChanges).ToList();
+
     }
 }

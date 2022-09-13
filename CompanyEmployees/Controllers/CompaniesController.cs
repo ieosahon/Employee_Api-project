@@ -99,5 +99,56 @@ namespace CompanyEmployees.Controllers
             var companyToReturn = _mapper.Map<CompanyDto>(company);
             return CreatedAtRoute("getCompanyById", new { companyToReturn.Id }, companyToReturn);
         }
+
+        /// <summary>
+        /// A method to get the collection of companies
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [HttpGet("collection/{ids}", Name = "companyCollection")]
+        public IActionResult GetCompanyCollection(IEnumerable<Guid> ids)
+        {
+            if (ids == null)
+            {
+                return BadRequest($"Ids can not be null");
+            }
+
+            var companyCollection = _manager.Company.GetCompaniesById(ids, trackChanges: false);
+            if (companyCollection.Count() != ids.Count())
+            {
+                return NotFound(companyCollection);
+            }
+
+            var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyCollection);
+            return Ok(companyCollectionToReturn);
+        }
+
+        /// <summary>
+        /// Endpoint to create a collection of companies
+        /// </summary>
+        /// <param name="companyCreationDtos"></param>
+        /// <returns></returns>
+
+        [HttpPost("collections")]
+        public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyCreationDto> companyCreationDtos)
+        {
+            if(companyCreationDtos == null)
+            {
+                return BadRequest("Object can not be null");
+            }
+
+            var companyCollection = _mapper.Map<IEnumerable<Company>>(companyCreationDtos);
+            foreach(var company in companyCollection)
+            {
+                _manager.Company.CreateCompany(company);
+            }
+
+            _manager.Save();
+
+            var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyCollection);
+            var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
+
+            return CreatedAtRoute("companyCollection", new { ids }, companyCollectionToReturn);
+        }
     }
 }
