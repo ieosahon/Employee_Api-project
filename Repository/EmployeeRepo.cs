@@ -48,5 +48,7 @@ namespace Repository
 
             return employee;
         }
+
+        public void DeleteEmployee(Employee employee) => Delete(employee);
     }
 }

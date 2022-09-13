@@ -74,5 +74,25 @@ namespace CompanyEmployees.Controllers
             var employeeToReturn = _mapper.Map<EmployeeDto>(employee);
             return CreatedAtRoute("getEmployeeById", new { companyId, id = employeeToReturn.Id}, employeeToReturn);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEmployee(Guid companyId, Guid id)
+        {
+            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            if (company == null)
+            {
+                return BadRequest($"company with id: {companyId} not found");
+            }
+
+            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            _manager.Employee.DeleteEmployee(employee);
+            _manager.Save();
+            return NoContent();
+        }
     }
 }
