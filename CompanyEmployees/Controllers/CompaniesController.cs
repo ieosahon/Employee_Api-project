@@ -151,5 +151,19 @@ namespace CompanyEmployees.Controllers
 
             return CreatedAtRoute("companyCollection", new { ids }, companyCollectionToReturn);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCompanyById(Guid id)
+        {
+            var company = _manager.Company.GetCompanyById(id, trackChanges: false);
+            if (company== null)
+            {
+                return NotFound($"Company with id: {id} not found");
+            }
+
+            _manager.Company.DeleteCompany(company);
+            _manager.Save();
+            return NoContent();
+        }
     }
 }

@@ -41,5 +41,6 @@ namespace Repository
         public IEnumerable<Company> GetCompaniesById(IEnumerable<Guid> ids, bool trackChanges) =>
             FindByCondition(c => ids.Contains(c.Id), trackChanges).ToList();
 
+        public void DeleteCompany(Company company) => Delete(company);
     }
 }
