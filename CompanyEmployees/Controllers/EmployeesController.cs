@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace CompanyEmployees.Controllers
 {
     [Route("api/v1/companies/{companyId}/employees")]
-    [ApiController]
+    //[ApiController]
     public class EmployeesController : ControllerBase
     {
         private readonly IRepoManager _manager;
@@ -67,6 +67,10 @@ namespace CompanyEmployees.Controllers
             {
                 throw new ArgumentException($"Company with {companyId} not found");
             }
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
             var employee = _mapper.Map<Employee>(createEmployee);
             _manager.Employee.CreateEmployee(companyId, employee);
@@ -110,6 +114,11 @@ namespace CompanyEmployees.Controllers
                 return NotFound($"Company with id: {companyId} not found");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);
             if (employee == null)
             {
@@ -144,7 +153,14 @@ namespace CompanyEmployees.Controllers
             }
 
             var employeeToPatch = _mapper.Map<EmployeeUpdateDto>(employee);
-            employeeUpdateDto.ApplyTo(employeeToPatch);
+            employeeUpdateDto.ApplyTo(employeeToPatch, ModelState);
+
+            TryValidateModel(employeeToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
             _mapper.Map(employeeToPatch, employee);
             _manager.Save();

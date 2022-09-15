@@ -14,7 +14,7 @@ using System.Linq;
 namespace CompanyEmployees.Controllers
 {
     [Route("api/v1/[controller]")]
-    [ApiController]
+    //[ApiController]
     public class CompaniesController : ControllerBase
     {
         private readonly IRepoManager _manager;
@@ -35,16 +35,8 @@ namespace CompanyEmployees.Controllers
 
             var companies = _manager.Company.GetAllCompanies(trackChanges: false);
                 var companiesDto = _mapper.Map <IEnumerable<CompanyDto>>(companies);
-
-                /*var companiesDto = companies.Select(c => new CompanyDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    FullAddress = string.Join(" ", c.Address, c.Country)
-                }).ToList();*/
                 return Ok(companiesDto);
             
-
         }
 
         [HttpGet("{id}", Name ="getCompanyById")]
@@ -67,6 +59,10 @@ namespace CompanyEmployees.Controllers
                 throw new ArgumentNullException("Null data provided");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyCreation);
@@ -92,6 +88,10 @@ namespace CompanyEmployees.Controllers
                 throw new ArgumentNullException("Null data provided");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyEmployeeCreation);
@@ -139,6 +139,11 @@ namespace CompanyEmployees.Controllers
                 return BadRequest("Object can not be null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             var companyCollection = _mapper.Map<IEnumerable<Company>>(companyCreationDtos);
             foreach(var company in companyCollection)
             {
@@ -175,6 +180,11 @@ namespace CompanyEmployees.Controllers
                 return BadRequest($"No value passed");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             var company = _manager.Company.GetCompanyById(id, trackChanges: true);
             if (company == null)
             {
@@ -200,8 +210,16 @@ namespace CompanyEmployees.Controllers
             {
                 return NotFound($"Company with id: {id} not found ");
             }
+
             var companyToPatch = _mapper.Map<CompanyUpdateDto>(company);
-            companyUpdate.ApplyTo(companyToPatch);
+            companyUpdate.ApplyTo(companyToPatch, ModelState);
+
+            TryValidateModel(companyToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
 
             _mapper.Map(companyToPatch, company);
             _manager.Save();

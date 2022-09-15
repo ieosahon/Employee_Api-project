@@ -38,6 +38,13 @@ namespace CompanyEmployees
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepoManager();
 
+            // for returning a different status code when validation fails
+            // remove [ApiController] from the controller class
+            services.Configure<ApiBehaviorOptions>(opt =>
+            {
+                opt.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers(cf =>

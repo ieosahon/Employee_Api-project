@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entities.DTO.CompanyDto
 {
-    public class CompanyCreationDto
+    public class CompanyCreationDto : CompanyInputDto
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string country { get; set; }
     }
 }
