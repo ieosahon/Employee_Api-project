@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DTO.EmployeeDto;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -116,6 +117,36 @@ namespace CompanyEmployees.Controllers
             }
 
             _mapper.Map(employeeUpdateDto, employee);
+            _manager.Save();
+
+            return NoContent();
+
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartialEmployeeUpdate(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeUpdateDto> employeeUpdateDto)
+        {
+            if (employeeUpdateDto == null)
+            {
+                return BadRequest("Object can not be null");
+            }
+
+            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            if (company == null)
+            {
+                return NotFound($"Company with id: {companyId} not found");
+            }
+
+            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);
+            if (employee == null)
+            {
+                return NotFound($"Employee with id: {id} not found");
+            }
+
+            var employeeToPatch = _mapper.Map<EmployeeUpdateDto>(employee);
+            employeeUpdateDto.ApplyTo(employeeToPatch);
+
+            _mapper.Map(employeeToPatch, employee);
             _manager.Save();
 
             return NoContent();

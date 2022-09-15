@@ -5,6 +5,7 @@ using Entities.DTO.CompanyDto;
 using Entities.DTO.CompanyEmployeeDto;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -167,7 +168,7 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCompany(Guid id, CompanyUpdateDto companyUpdateDto)
+        public IActionResult UpdateCompany(Guid id, [FromBody]CompanyUpdateDto companyUpdateDto)
         {
             if(companyUpdateDto == null)
             {
@@ -184,6 +185,28 @@ namespace CompanyEmployees.Controllers
             _manager.Save();
 
             return NoContent();
-        } 
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartialUpdateCompany(Guid id, [FromBody] JsonPatchDocument<CompanyUpdateDto> companyUpdate)
+        {
+            if (companyUpdate == null)
+            {
+                return BadRequest($"No value passed");
+            }
+
+            var company = _manager.Company.GetCompanyById(id, trackChanges: true);
+            if (company == null)
+            {
+                return NotFound($"Company with id: {id} not found ");
+            }
+            var companyToPatch = _mapper.Map<CompanyUpdateDto>(company);
+            companyUpdate.ApplyTo(companyToPatch);
+
+            _mapper.Map(companyToPatch, company);
+            _manager.Save();
+
+            return NoContent();
+        }
     }
 }

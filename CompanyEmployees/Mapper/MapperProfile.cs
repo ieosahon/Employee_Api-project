@@ -24,8 +24,10 @@ namespace CompanyEmployees.Mapper
             CreateMap<CompanyEmployeeCreationDto, Company>();
 
             // update
-            CreateMap<EmployeeUpdateDto, Employee>();
-            CreateMap<CompanyUpdateDto, Company>();
+            CreateMap<EmployeeUpdateDto, Employee>()
+                .ReverseMap();
+            CreateMap<CompanyUpdateDto, Company>()
+                .ReverseMap();
         }
     }
 }

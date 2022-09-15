@@ -44,7 +44,10 @@ namespace CompanyEmployees
             {
                 cf.RespectBrowserAcceptHeader = true;
                 cf.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();
+            })
+                .AddNewtonsoftJson()
+                .AddXmlDataContractSerializerFormatters();
+                //.AddCustonCSVFormatter();
         }
 
 
