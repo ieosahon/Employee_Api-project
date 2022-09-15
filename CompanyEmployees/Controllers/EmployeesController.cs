@@ -94,5 +94,32 @@ namespace CompanyEmployees.Controllers
             _manager.Save();
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateEmployee(Guid companyId, Guid id, [FromBody] EmployeeUpdateDto employeeUpdateDto)
+        {
+            if (employeeUpdateDto == null)
+            {
+                return BadRequest("Object can not be null");
+            }
+
+            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            if (company == null)
+            {
+                return NotFound($"Company with id: {companyId} not found");
+            }
+
+            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);
+            if (employee == null)
+            {
+                return NotFound($"Employee with id: {id} not found");
+            }
+
+            _mapper.Map(employeeUpdateDto, employee);
+            _manager.Save();
+
+            return NoContent();
+
+        }
     }
 }

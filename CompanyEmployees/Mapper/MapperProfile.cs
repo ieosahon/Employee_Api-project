@@ -19,8 +19,13 @@ namespace CompanyEmployees.Mapper
             // createion
             CreateMap<CompanyCreationDto, Company>();
             CreateMap<CreateEmployeeDto, Employee>();
-            //
+
+            //create employee along side company creation
             CreateMap<CompanyEmployeeCreationDto, Company>();
+
+            // update
+            CreateMap<EmployeeUpdateDto, Employee>();
+            CreateMap<CompanyUpdateDto, Company>();
         }
     }
 }

@@ -165,5 +165,25 @@ namespace CompanyEmployees.Controllers
             _manager.Save();
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateCompany(Guid id, CompanyUpdateDto companyUpdateDto)
+        {
+            if(companyUpdateDto == null)
+            {
+                return BadRequest($"No value passed");
+            }
+
+            var company = _manager.Company.GetCompanyById(id, trackChanges: true);
+            if (company == null)
+            {
+                return NotFound($"Company with id: {id} not found ");
+            }
+
+            _mapper.Map(companyUpdateDto, company);
+            _manager.Save();
+
+            return NoContent();
+        } 
     }
 }
