@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CompanyEmployees.Controllers
 {
@@ -27,9 +28,9 @@ namespace CompanyEmployees.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAllEmployees(Guid companyId)
+        public async Task<IActionResult> GetAllEmployees(Guid companyId)
         {
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company = await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
@@ -41,28 +42,28 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet("{id}", Name = "getEmployeeById")]
-        public IActionResult GetEmployeeById(Guid companyId, Guid id)
+        public async Task<IActionResult> GetEmployeeById(Guid companyId, Guid id)
         {
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
             }
 
-            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            var employee =await _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
             return Ok(employeeDto);
         }
 
         [HttpPost]
-        public IActionResult CreateEmployee(Guid companyId, [FromBody] CreateEmployeeDto createEmployee)
+        public async Task<IActionResult> CreateEmployee(Guid companyId, [FromBody] CreateEmployeeDto createEmployee)
         {
             if (createEmployee == null)
             {
                 throw new ArgumentNullException("Object is null");
             }
 
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 throw new ArgumentException($"Company with {companyId} not found");
@@ -74,41 +75,41 @@ namespace CompanyEmployees.Controllers
 
             var employee = _mapper.Map<Employee>(createEmployee);
             _manager.Employee.CreateEmployee(companyId, employee);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             var employeeToReturn = _mapper.Map<EmployeeDto>(employee);
             return CreatedAtRoute("getEmployeeById", new { companyId, id = employeeToReturn.Id}, employeeToReturn);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEmployee(Guid companyId, Guid id)
+        public async Task<IActionResult> DeleteEmployee(Guid companyId, Guid id)
         {
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return BadRequest($"company with id: {companyId} not found");
             }
 
-            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            var employee = await _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
             if (employee == null)
             {
                 return NotFound();
             }
 
             _manager.Employee.DeleteEmployee(employee);
-            _manager.Save();
+            await _manager.SaveAsync();
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateEmployee(Guid companyId, Guid id, [FromBody] EmployeeUpdateDto employeeUpdateDto)
+        public async Task<IActionResult> UpdateEmployee(Guid companyId, Guid id, [FromBody] EmployeeUpdateDto employeeUpdateDto)
         {
             if (employeeUpdateDto == null)
             {
                 return BadRequest("Object can not be null");
             }
 
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound($"Company with id: {companyId} not found");
@@ -125,22 +126,22 @@ namespace CompanyEmployees.Controllers
                 return NotFound($"Employee with id: {id} not found");
             }
 
-            _mapper.Map(employeeUpdateDto, employee);
-            _manager.Save();
+            await _mapper.Map(employeeUpdateDto, employee);
+            await _manager.SaveAsync();
 
             return NoContent();
 
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartialEmployeeUpdate(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeUpdateDto> employeeUpdateDto)
+        public async Task<IActionResult> PartialEmployeeUpdate(Guid companyId, Guid id, [FromBody] JsonPatchDocument<EmployeeUpdateDto> employeeUpdateDto)
         {
             if (employeeUpdateDto == null)
             {
                 return BadRequest("Object can not be null");
             }
 
-            var company = _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound($"Company with id: {companyId} not found");
@@ -162,8 +163,8 @@ namespace CompanyEmployees.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            _mapper.Map(employeeToPatch, employee);
-            _manager.Save();
+            await _mapper.Map(employeeToPatch, employee);
+            await _manager.SaveAsync();
 
             return NoContent();
 

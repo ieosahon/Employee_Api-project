@@ -10,6 +10,6 @@ namespace Contracts
     {
         ICompanyRepo Company { get; }
         IEmployeeRepo Employee { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

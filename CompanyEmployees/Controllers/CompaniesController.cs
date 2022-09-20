@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CompanyEmployees.Controllers
 {
@@ -29,20 +30,20 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCompanies()
+        public async Task<IActionResult> GetAllCompanies()
         {
             
 
-            var companies = _manager.Company.GetAllCompanies(trackChanges: false);
+            var companies = await _manager.Company.GetAllCompanies(trackChanges: false);
                 var companiesDto = _mapper.Map <IEnumerable<CompanyDto>>(companies);
                 return Ok(companiesDto);
             
         }
 
         [HttpGet("{id}", Name ="getCompanyById")]
-        public IActionResult GetCompanyById(Guid Id)
+        public async Task<IActionResult> GetCompanyById(Guid Id)
         {
-            var company = _manager.Company.GetCompanyById(Id, trackChanges: false);
+            var company = await _manager.Company.GetCompanyById(Id, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
@@ -52,7 +53,7 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCompany([FromBody] CompanyCreationDto companyCreation)
+        public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationDto companyCreation)
         {
             if (companyCreation == null)
             {
@@ -67,7 +68,7 @@ namespace CompanyEmployees.Controllers
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyCreation);
             _manager.Company.CreateCompany(company);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             var companyToReturn = _mapper.Map<CompanyDto>(company);
             return CreatedAtRoute("getCompanyById", new { companyToReturn.Id }, companyToReturn);
@@ -81,7 +82,7 @@ namespace CompanyEmployees.Controllers
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("company-employee")]
-        public IActionResult CreateCompany([FromBody] CompanyEmployeeCreationDto companyEmployeeCreation)
+        public async Task<IActionResult> CreateCompany([FromBody] CompanyEmployeeCreationDto companyEmployeeCreation)
         {
             if (companyEmployeeCreation == null)
             {
@@ -96,7 +97,7 @@ namespace CompanyEmployees.Controllers
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyEmployeeCreation);
             _manager.Company.CreateCompany(company);
-            _manager.Save();
+            await _manager.SaveAsync();
 
             var companyToReturn = _mapper.Map<CompanyDto>(company);
             return CreatedAtRoute("getCompanyById", new { companyToReturn.Id }, companyToReturn);
@@ -108,14 +109,14 @@ namespace CompanyEmployees.Controllers
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpGet("collection/{ids}", Name = "companyCollection")]
-        public IActionResult GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
                 return BadRequest($"Ids can not be null");
             }
 
-            var companyCollection = _manager.Company.GetCompaniesById(ids, trackChanges: false);
+            var companyCollection = await _manager.Company.GetCompaniesById(ids, trackChanges: false);
             if (companyCollection.Count() != ids.Count())
             {
                 return NotFound(companyCollection);
@@ -132,7 +133,7 @@ namespace CompanyEmployees.Controllers
         /// <returns></returns>
 
         [HttpPost("collections")]
-        public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyCreationDto> companyCreationDtos)
+        public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyCreationDto> companyCreationDtos)
         {
             if(companyCreationDtos == null)
             {
@@ -150,7 +151,7 @@ namespace CompanyEmployees.Controllers
                 _manager.Company.CreateCompany(company);
             }
 
-            _manager.Save();
+            await _manager.SaveAsync();
 
             var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyCollection);
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
@@ -159,21 +160,21 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCompanyById(Guid id)
+        public async Task<IActionResult> DeleteCompanyById(Guid id)
         {
-            var company = _manager.Company.GetCompanyById(id, trackChanges: false);
+            var company =await _manager.Company.GetCompanyById(id, trackChanges: false);
             if (company== null)
             {
                 return NotFound($"Company with id: {id} not found");
             }
 
             _manager.Company.DeleteCompany(company);
-            _manager.Save();
+            await _manager.SaveAsync();
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCompany(Guid id, [FromBody]CompanyUpdateDto companyUpdateDto)
+        public async Task<IActionResult> UpdateCompany(Guid id, [FromBody]CompanyUpdateDto companyUpdateDto)
         {
             if(companyUpdateDto == null)
             {
@@ -191,14 +192,14 @@ namespace CompanyEmployees.Controllers
                 return NotFound($"Company with id: {id} not found ");
             }
 
-            _mapper.Map(companyUpdateDto, company);
-            _manager.Save();
+            await _mapper.Map(companyUpdateDto, company);
+            await _manager.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartialUpdateCompany(Guid id, [FromBody] JsonPatchDocument<CompanyUpdateDto> companyUpdate)
+        public async Task<IActionResult> PartialUpdateCompany(Guid id, [FromBody] JsonPatchDocument<CompanyUpdateDto> companyUpdate)
         {
             if (companyUpdate == null)
             {
@@ -221,8 +222,8 @@ namespace CompanyEmployees.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            _mapper.Map(companyToPatch, company);
-            _manager.Save();
+            await _mapper.Map(companyToPatch, company);
+            await _manager.SaveAsync();
 
             return NoContent();
         }
