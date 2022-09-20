@@ -1,3 +1,4 @@
+using CompanyEmployees.ActionFilters;
 using CompanyEmployees.Extensions;
 using CompanyEmployees.MiddleWares;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +38,9 @@ namespace CompanyEmployees
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepoManager();
+
+            // registration of action filters
+            services.AddScoped<ValidationActionAttribute>();
 
             // for returning a different status code when validation fails
             // remove [ApiController] from the controller class

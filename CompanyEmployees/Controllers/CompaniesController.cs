@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CompanyEmployees.ActionFilters;
 using CompanyEmployees.ModelBinders;
 using Contracts;
 using Entities.DTO.CompanyDto;
@@ -53,9 +54,10 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationDto companyCreation)
         {
-            if (companyCreation == null)
+            /*if (companyCreation == null)
             {
                 throw new ArgumentNullException("Null data provided");
             }
@@ -63,7 +65,7 @@ namespace CompanyEmployees.Controllers
             if (!ModelState.IsValid)
             {
                 return UnprocessableEntity(ModelState);
-            }
+            }*/
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyCreation);
