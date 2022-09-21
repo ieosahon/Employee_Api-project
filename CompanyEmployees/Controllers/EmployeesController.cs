@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CompanyEmployees.ActionFilters;
 using Contracts;
 using Entities.DTO.EmployeeDto;
 using Entities.Models;
@@ -56,21 +57,14 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> CreateEmployee(Guid companyId, [FromBody] CreateEmployeeDto createEmployee)
         {
-            if (createEmployee == null)
-            {
-                throw new ArgumentNullException("Object is null");
-            }
 
             var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 throw new ArgumentException($"Company with {companyId} not found");
-            }
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
             }
 
             var employee = _mapper.Map<Employee>(createEmployee);
@@ -102,22 +96,14 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> UpdateEmployee(Guid companyId, Guid id, [FromBody] EmployeeUpdateDto employeeUpdateDto)
         {
-            if (employeeUpdateDto == null)
-            {
-                return BadRequest("Object can not be null");
-            }
 
             var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound($"Company with id: {companyId} not found");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
             }
 
             var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);

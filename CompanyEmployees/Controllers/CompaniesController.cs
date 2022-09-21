@@ -57,15 +57,6 @@ namespace CompanyEmployees.Controllers
         [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationDto companyCreation)
         {
-            /*if (companyCreation == null)
-            {
-                throw new ArgumentNullException("Null data provided");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }*/
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyCreation);
@@ -84,17 +75,9 @@ namespace CompanyEmployees.Controllers
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         [HttpPost("company-employee")]
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyEmployeeCreationDto companyEmployeeCreation)
         {
-            if (companyEmployeeCreation == null)
-            {
-                throw new ArgumentNullException("Null data provided");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
 
             // mapping: First object is the destination while the second item is the source
             var company = _mapper.Map<Company>(companyEmployeeCreation);
@@ -135,17 +118,9 @@ namespace CompanyEmployees.Controllers
         /// <returns></returns>
 
         [HttpPost("collections")]
+
         public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyCreationDto> companyCreationDtos)
         {
-            if(companyCreationDtos == null)
-            {
-                return BadRequest("Object can not be null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
 
             var companyCollection = _mapper.Map<IEnumerable<Company>>(companyCreationDtos);
             foreach(var company in companyCollection)
@@ -176,25 +151,16 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid id, [FromBody]CompanyUpdateDto companyUpdateDto)
         {
-            if(companyUpdateDto == null)
-            {
-                return BadRequest($"No value passed");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
-
-            var company = _manager.Company.GetCompanyById(id, trackChanges: true);
+            var company =await  _manager.Company.GetCompanyById(id, trackChanges: true);
             if (company == null)
             {
                 return NotFound($"Company with id: {id} not found ");
             }
 
-            await _mapper.Map(companyUpdateDto, company);
+             _mapper.Map(companyUpdateDto, company);
             await _manager.SaveAsync();
 
             return NoContent();

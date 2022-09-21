@@ -20,7 +20,7 @@ namespace CompanyEmployees.ActionFilters
             var action = context.RouteData.Values["action"];
             var controller = context.RouteData.Values["controller"];
 
-            var parameter = context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("")).Value;
+            var parameter = context.ActionArguments.SingleOrDefault(x => x.Value.ToString().Contains("Dto")).Value;
 
             if (parameter == null)
             {
