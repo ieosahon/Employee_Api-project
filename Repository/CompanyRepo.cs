@@ -3,6 +3,7 @@ using Entities;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Microsoft.EntityFrameworkCore;
+using Repository.RepositoryExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace Repository
         {
             var companys = await FindAll(trackChanges)
                 .OrderBy(c => c.Name)
+                .SearchCompay(companyParameters.SearchTerm)
                 .ToListAsync();
             
             if (companys == null)
