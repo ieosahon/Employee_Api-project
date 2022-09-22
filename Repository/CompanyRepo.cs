@@ -27,8 +27,9 @@ namespace Repository
             .ToListAsync();*/
         {
             var companys = await FindAll(trackChanges)
-                .OrderBy(c => c.Name)
+                //.OrderBy(c => c.Name)
                 .SearchCompay(companyParameters.SearchTerm)
+                .Sort(companyParameters.OrderBy)
                 .ToListAsync();
             
             if (companys == null)

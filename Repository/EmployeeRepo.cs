@@ -30,6 +30,7 @@ namespace Repository
             var employees = await FindByCondition(e => e.CompanyId == companyId, trackChanges)
                 .FilterEmployee(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .SearchEmployee(employeeParameters.SearchTerm)
+                .Sort(employeeParameters.OrderBy)
                 .OrderBy(e => e.Name)
                 .ToListAsync();
                 

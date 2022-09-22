@@ -8,6 +8,14 @@ namespace Entities.RequestFeatures
 {
     public class EmployeeParameters : RequestParameters
     {
+
+        public EmployeeParameters()
+        {
+
+            // to sort by a default parameter if null is passed
+            OrderBy = "name";
+        }
+
         // implementing filtering
 
         public uint MinAge { get; set; } // default value = 0
