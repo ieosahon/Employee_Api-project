@@ -39,6 +39,11 @@ namespace CompanyEmployees.Controllers
                 return NotFound(company);
             }
 
+            if (!employeeParameters.IsValidRange)
+            {
+                return BadRequest($"Max age {employeeParameters.MaxAge} can not be less that Min age {employeeParameters.MinAge}");
+            }
+
             var employees = await _manager.Employee.GetAllEmployeeAsync(companyId, employeeParameters, trackChanges: false);
 
             Response.Headers.Add("X-Pagination",
