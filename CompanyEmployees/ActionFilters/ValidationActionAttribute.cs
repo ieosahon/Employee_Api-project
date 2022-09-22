@@ -24,12 +24,14 @@ namespace CompanyEmployees.ActionFilters
 
             if (parameter == null)
             {
+                _logger.LogError($"Invalid model state for the object. Controller: {controller}, action: {action}");
                 context.Result = new BadRequestObjectResult($"Input: {parameter} can not be null. Controller : {controller}. Action: {action}");
                 return;
             }
 
             if (!context.ModelState.IsValid)
             {
+                _logger.LogError($"Invalid model state for the object. Controller: {controller}, action: {action}");
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             }
 

@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Contracts
 {
     public interface IEmployeeRepo
     {
-        Task<IEnumerable<Employee>> GetAllEmployee(Guid companyId, bool trackChanges);
-        Task<Employee> GetEmployeeById(Guid companyId, Guid id, bool trackChanges);
+        Task<PagedList<Employee>> GetAllEmployeeAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges);
+        Task<Employee> GetEmployeeByIdAsync(Guid companyId, Guid id, bool trackChanges);
         void CreateEmployee(Guid companyId, Employee employee);
         void DeleteEmployee(Employee employee);
     }

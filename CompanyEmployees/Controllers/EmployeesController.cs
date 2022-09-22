@@ -3,9 +3,11 @@ using CompanyEmployees.ActionFilters;
 using Contracts;
 using Entities.DTO.EmployeeDto;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,15 +31,20 @@ namespace CompanyEmployees.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllEmployees(Guid companyId)
+        public async Task<IActionResult> GetAllEmployees(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
-            var company = await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company = await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
             }
 
-            var employees = _manager.Employee.GetAllEmployee(companyId, trackChanges: false);
+            var employees = await _manager.Employee.GetAllEmployeeAsync(companyId, employeeParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination",
+            JsonConvert.SerializeObject(employees.MetaData));
+
+
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             return Ok(employeesDto);
         }
@@ -45,13 +52,13 @@ namespace CompanyEmployees.Controllers
         [HttpGet("{id}", Name = "getEmployeeById")]
         public async Task<IActionResult> GetEmployeeById(Guid companyId, Guid id)
         {
-            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
             }
 
-            var employee =await _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            var employee =await _manager.Employee.GetEmployeeByIdAsync(companyId, id, trackChanges: false);
             var employeeDto = _mapper.Map<EmployeeDto>(employee);
             return Ok(employeeDto);
         }
@@ -61,7 +68,7 @@ namespace CompanyEmployees.Controllers
         public async Task<IActionResult> CreateEmployee(Guid companyId, [FromBody] CreateEmployeeDto createEmployee)
         {
 
-            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 throw new ArgumentException($"Company with {companyId} not found");
@@ -78,13 +85,13 @@ namespace CompanyEmployees.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid companyId, Guid id)
         {
-            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 return BadRequest($"company with id: {companyId} not found");
             }
 
-            var employee = await _manager.Employee.GetEmployeeById(companyId, id, trackChanges: false);
+            var employee = await _manager.Employee.GetEmployeeByIdAsync(companyId, id, trackChanges: false);
             if (employee == null)
             {
                 return NotFound();
@@ -100,13 +107,13 @@ namespace CompanyEmployees.Controllers
         public async Task<IActionResult> UpdateEmployee(Guid companyId, Guid id, [FromBody] EmployeeUpdateDto employeeUpdateDto)
         {
 
-            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound($"Company with id: {companyId} not found");
             }
 
-            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);
+            var employee = _manager.Employee.GetEmployeeByIdAsync(companyId, id, trackChanges: true);
             if (employee == null)
             {
                 return NotFound($"Employee with id: {id} not found");
@@ -127,13 +134,13 @@ namespace CompanyEmployees.Controllers
                 return BadRequest("Object can not be null");
             }
 
-            var company =await _manager.Company.GetCompanyById(companyId, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
             if (company == null)
             {
                 return NotFound($"Company with id: {companyId} not found");
             }
 
-            var employee = _manager.Employee.GetEmployeeById(companyId, id, trackChanges: true);
+            var employee = _manager.Employee.GetEmployeeByIdAsync(companyId, id, trackChanges: true);
             if (employee == null)
             {
                 return NotFound($"Employee with id: {id} not found");

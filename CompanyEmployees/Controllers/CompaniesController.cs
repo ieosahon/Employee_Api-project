@@ -5,9 +5,11 @@ using Contracts;
 using Entities.DTO.CompanyDto;
 using Entities.DTO.CompanyEmployeeDto;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +33,17 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCompanies()
+        public async Task<IActionResult> GetAllCompanies([FromQuery] CompanyParameters companyParameters)
         {
             
 
-            var companies = await _manager.Company.GetAllCompanies(trackChanges: false);
-                var companiesDto = _mapper.Map <IEnumerable<CompanyDto>>(companies);
+            var companies = await _manager.Company.GetAllCompanies(companyParameters ,trackChanges: false);
+
+            Response.Headers.Add("X-Pagination",
+            JsonConvert.SerializeObject(companies.MetaData));
+
+
+            var companiesDto = _mapper.Map <IEnumerable<CompanyDto>>(companies);
                 return Ok(companiesDto);
             
         }
@@ -44,7 +51,7 @@ namespace CompanyEmployees.Controllers
         [HttpGet("{id}", Name ="getCompanyById")]
         public async Task<IActionResult> GetCompanyById(Guid Id)
         {
-            var company = await _manager.Company.GetCompanyById(Id, trackChanges: false);
+            var company = await _manager.Company.GetCompanyByIdAsync(Id, trackChanges: false);
             if (company == null)
             {
                 return NotFound(company);
@@ -139,7 +146,7 @@ namespace CompanyEmployees.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompanyById(Guid id)
         {
-            var company =await _manager.Company.GetCompanyById(id, trackChanges: false);
+            var company =await _manager.Company.GetCompanyByIdAsync(id, trackChanges: false);
             if (company== null)
             {
                 return NotFound($"Company with id: {id} not found");
@@ -154,7 +161,7 @@ namespace CompanyEmployees.Controllers
         [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> UpdateCompany(Guid id, [FromBody]CompanyUpdateDto companyUpdateDto)
         {
-            var company =await  _manager.Company.GetCompanyById(id, trackChanges: true);
+            var company =await  _manager.Company.GetCompanyByIdAsync(id, trackChanges: true);
             if (company == null)
             {
                 return NotFound($"Company with id: {id} not found ");
@@ -174,7 +181,7 @@ namespace CompanyEmployees.Controllers
                 return BadRequest($"No value passed");
             }
 
-            var company = _manager.Company.GetCompanyById(id, trackChanges: true);
+            var company = _manager.Company.GetCompanyByIdAsync(id, trackChanges: true);
             if (company == null)
             {
                 return NotFound($"Company with id: {id} not found ");
