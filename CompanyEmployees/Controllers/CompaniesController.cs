@@ -33,6 +33,7 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetAllCompanies([FromQuery] CompanyParameters companyParameters)
         {
             
@@ -49,6 +50,7 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet("{id}", Name ="getCompanyById")]
+        [HttpHead("{id}", Name = "getCompanyById")]
         public async Task<IActionResult> GetCompanyById(Guid Id)
         {
             var company = await _manager.Company.GetCompanyByIdAsync(Id, trackChanges: false);
@@ -101,6 +103,7 @@ namespace CompanyEmployees.Controllers
         /// <param name="ids"></param>
         /// <returns></returns>
         [HttpGet("collection/{ids}", Name = "companyCollection")]
+        [HttpHead("collection/{ids}", Name = "companyCollection")]
         public async Task<IActionResult> GetCompanyCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
         {
             if (ids == null)

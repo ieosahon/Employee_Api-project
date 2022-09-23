@@ -31,6 +31,7 @@ namespace CompanyEmployees.Controllers
 
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetAllEmployees(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             var company = await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
@@ -55,6 +56,7 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet("{id}", Name = "getEmployeeById")]
+        [HttpHead("{id}", Name = "getEmployeeById")]
         public async Task<IActionResult> GetEmployeeById(Guid companyId, Guid id)
         {
             var company =await _manager.Company.GetCompanyByIdAsync(companyId, trackChanges: false);
