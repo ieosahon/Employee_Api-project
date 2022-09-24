@@ -17,8 +17,9 @@ using System.Threading.Tasks;
 
 namespace CompanyEmployees.Controllers
 {
-    [Route("api/v1/[controller]")]
-    //[ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/{v:apiversion}/Companies")]
+    [ApiController]
     public class CompaniesController : ControllerBase
     {
         private readonly IRepoManager _manager;

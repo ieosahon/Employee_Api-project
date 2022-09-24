@@ -39,6 +39,9 @@ namespace CompanyEmployees
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepoManager();
 
+            // Api versioning
+            services.ConfigureVersioning();
+
             // registration of action filters
             services.AddScoped<ValidationActionAttribute>();
 
