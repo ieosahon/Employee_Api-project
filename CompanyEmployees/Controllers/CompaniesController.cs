@@ -50,7 +50,9 @@ namespace CompanyEmployees.Controllers
             
         }
 
+        //[ResponseCache(CacheProfileName = "cacheDuration")]
         [HttpGet("{id}", Name ="getCompanyById")]
+        
         [HttpHead("{id}", Name = "getCompanyById")]
         public async Task<IActionResult> GetCompanyById(Guid Id)
         {
