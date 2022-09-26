@@ -131,7 +131,7 @@ namespace CompanyEmployees.Controllers
         /// <returns></returns>
 
         [HttpPost("collections")]
-
+        [ServiceFilter(typeof(ValidationActionAttribute))]
         public async Task<IActionResult> CreateCompanyCollection([FromBody] IEnumerable<CompanyCreationDto> companyCreationDtos)
         {
 

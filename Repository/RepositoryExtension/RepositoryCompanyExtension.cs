@@ -12,6 +12,13 @@ namespace Repository.RepositoryExtension
 {
     public static class RepositoryCompanyExtension
     {
+
+        /// <summary>
+        /// to enable searching
+        /// </summary>
+        /// <param name="companies"></param>
+        /// <param name="searchTerm"></param>
+        /// <returns></returns>
         public static IQueryable<Company> SearchCompay (this IQueryable<Company> companies, string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
@@ -23,6 +30,12 @@ namespace Repository.RepositoryExtension
             return companies.Where(x => x.Name.ToLower().Contains(lowerTermCase));
         }
 
+        /// <summary>
+        /// to enable sorting
+        /// </summary>
+        /// <param name="companies"></param>
+        /// <param name="orderByQueryString"></param>
+        /// <returns></returns>
         public static IQueryable<Company> Sort(this IQueryable<Company> companies, string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))

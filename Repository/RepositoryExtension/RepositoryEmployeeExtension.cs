@@ -12,6 +12,14 @@ namespace Repository.RepositoryExtension
 {
     public static class RepositoryEmployeeExtension
     {
+
+        /// <summary>
+        /// filtering by age
+        /// </summary>
+        /// <param name="employees"></param>
+        /// <param name="minAge"></param>
+        /// <param name="maxAge"></param>
+        /// <returns></returns>
         public static IQueryable<Employee> FilterEmployee(this IQueryable<Employee> employees, uint minAge, uint maxAge)
         {
             return employees.Where(e => (e.Age >= minAge) && (e.Age <= maxAge));

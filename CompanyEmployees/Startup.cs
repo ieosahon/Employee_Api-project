@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using CompanyEmployees.ActionFilters;
 using CompanyEmployees.Extensions;
 using CompanyEmployees.MiddleWares;
@@ -41,6 +42,15 @@ namespace CompanyEmployees
 
             // Api versioning
             services.ConfigureVersioning();
+
+            // rate limit and throttling
+            // ASP NET CORE RATE LIMIT library uses memory cache
+
+            services.AddMemoryCache();
+
+            services.ConfigureRateLimit();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
 
             // registration of action filters
             services.AddScoped<ValidationActionAttribute>();
@@ -86,6 +96,8 @@ namespace CompanyEmployees
             {
                 app.UseHsts();
             }
+
+
             app.UseMiddleware<CustomErrorExecption>();
 
             app.UseHttpsRedirection();
@@ -96,6 +108,9 @@ namespace CompanyEmployees
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
+
+            // rate limiting
+            app.UseIpRateLimiting();
 
             app.UseResponseCaching();
 
