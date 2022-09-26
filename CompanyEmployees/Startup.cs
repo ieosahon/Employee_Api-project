@@ -52,6 +52,11 @@ namespace CompanyEmployees
             services.AddHttpContextAccessor();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
 
+            // register Identity configuration
+            services.ConfigureIdentity();
+
+            services.AddAuthentication();
+
             // registration of action filters
             services.AddScoped<ValidationActionAttribute>();
 
@@ -117,6 +122,8 @@ namespace CompanyEmployees
             app.UseHttpCacheHeaders();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
